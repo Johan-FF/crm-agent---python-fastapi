@@ -181,10 +181,9 @@ class ContactRepository:
             }
         
         try:
-            url = f"{self.base_url}/persons"
+            url = f"{self.base_url}/persons?api_token={self.api_key}"
             payload = {
-                "name": name,
-                "api_token": self.api_key
+                "name": name
             }
             
             if email:
@@ -287,11 +286,10 @@ class ContactRepository:
             }
         
         try:
-            url = f"{self.base_url}/notes"
+            url = f"{self.base_url}/notes?api_token={self.api_key}"
             payload = {
                 "content": content,
-                "person_id": contact_id,
-                "api_token": self.api_key
+                "person_id": contact_id
             }
             
             resp = requests.post(url, json=payload, timeout=10)
@@ -324,9 +322,8 @@ class ContactRepository:
             return {"id": contact_id, **fields}
         
         try:
-            url = f"{self.base_url}/persons/{contact_id}"
+            url = f"{self.base_url}/persons/{contact_id}?api_token={self.api_key}"
             payload = {
-                "api_token": self.api_key,
                 **fields
             }
             

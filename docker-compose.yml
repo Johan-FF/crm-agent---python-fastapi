@@ -26,7 +26,7 @@ services:
     ports:
       - "8000:8000"
     environment:
-      - PIPEDRIVE_API_KEY=${PIPEDRIVE_API_KEY:-cb40fa53dc2a33d20df1402da6ee771c25fc713b}
+      - PIPEDRIVE_API_KEY=${PIPEDRIVE_API_KEY:-6bd60fe64624694773c5abb876e710d64cc3e489}
       - PIPEDRIVE_BASE_URL=https://api.pipedrive.com/v1
       - DATABASE_URL=postgresql://${DB_USER:-crm_user}:${DB_PASSWORD:-crm_password}@db:5432/${DB_NAME:-verticcal_crm}
       - LOG_LEVEL=INFO

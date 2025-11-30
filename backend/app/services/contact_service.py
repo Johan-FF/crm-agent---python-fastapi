@@ -165,8 +165,21 @@ class ContactService:
         correlation_id = generate_correlation_id()
         logger.info(f"[{correlation_id}] Actualizar contacto: {update.contact_id}")
         
-        # Validar campos
-        if not update.fields:
+        # Construir fields desde los parámetros
+        fields = {}
+        if update.name:
+            fields["name"] = update.name
+        if update.email:
+            fields["email"] = update.email
+        if update.phone:
+            fields["phone"] = update.phone
+        
+        # Agregar fields adicionales si se proporcionan
+        if update.fields:
+            fields.update(update.fields)
+        
+        # Validar que hay al menos un campo
+        if not fields:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="Debe proporcionar al menos un campo para actualizar"
@@ -179,7 +192,7 @@ class ContactService:
             try:
                 crm_result = self.repository.update_in_crm(
                     contact_id=update.contact_id,
-                    fields=update.fields
+                    fields=fields
                 )
                 crm_success = True
                 logger.info(f"[{correlation_id}] Contacto actualizado en Pipedrive")
@@ -189,7 +202,7 @@ class ContactService:
             # FALLBACK: Actualizar en PostgreSQL
             result = self.repository.update(
                 contact_id=update.contact_id,
-                **update.fields
+                **fields
             )
             
             logger.info(f"[{correlation_id}] Contacto actualizado: ID={update.contact_id}")
@@ -198,6 +211,7 @@ class ContactService:
                 success=True,
                 message=f"Contacto {update.contact_id} actualizado{'en Pipedrive' if crm_success else ' (en BD local)'}",
                 contact_id=update.contact_id,
+                phone=result.phone if result else None,
                 url=f"https://app.pipedrive.com/person/{update.contact_id}",
                 correlation_id=correlation_id
             )

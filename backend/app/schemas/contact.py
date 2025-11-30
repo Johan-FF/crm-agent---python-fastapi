@@ -24,13 +24,20 @@ class ContactCreate(BaseModel):
 class ContactUpdate(BaseModel):
     """Schema para actualizar un contacto"""
     contact_id: int = Field(..., description="ID del contacto")
-    fields: Dict[str, Any] = Field(..., description="Campos a actualizar")
+    name: Optional[str] = Field(None, description="Nombre del contacto")
+    email: Optional[str] = Field(None, description="Email del contacto")
+    phone: Optional[str] = Field(None, description="Teléfono del contacto")
+    fields: Optional[Dict[str, Any]] = Field(None, description="Campos adicionales a actualizar")
     
     class Config:
         examples = [
             {
                 "contact_id": 123,
-                "fields": {"phone": "+57 311 999 0000", "status": "Qualified"}
+                "phone": "+57 311 999 0000"
+            },
+            {
+                "contact_id": 123,
+                "fields": {"status": "Qualified"}
             }
         ]
 
@@ -41,6 +48,10 @@ class ContactResponse(BaseModel):
     message: str = Field(..., description="Mensaje de respuesta")
     contact_id: Optional[int] = Field(None, description="ID del contacto")
     crm_id: Optional[int] = Field(None, description="ID en el CRM")
+    name: Optional[str] = Field(None, description="Nombre del contacto")
+    email: Optional[str] = Field(None, description="Email del contacto")
+    phone: Optional[str] = Field(None, description="Teléfono del contacto")
+    note_id: Optional[int] = Field(None, description="ID de la nota creada")
     url: Optional[str] = Field(None, description="URL del contacto en el CRM")
     correlation_id: str = Field(..., description="ID para rastrear la operación")
 
