@@ -31,7 +31,7 @@ SessionLocal = sessionmaker(
 )
 
 
-async def init_db():
+def init_db():
     """
     Inicializa la base de datos creando todas las tablas
     """
@@ -44,7 +44,7 @@ async def init_db():
         raise
 
 
-async def close_db():
+def close_db():
     """
     Cierra la conexión a la base de datos
     """

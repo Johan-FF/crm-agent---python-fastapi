@@ -8,7 +8,7 @@ from pydantic import BaseModel, EmailStr, Field
 class ContactCreate(BaseModel):
     """Schema para crear un contacto"""
     name: str = Field(..., min_length=1, description="Nombre del contacto")
-    email: Optional[EmailStr] = Field(None, description="Email del contacto")
+    email: Optional[str] = Field(None, description="Email del contacto")
     phone: Optional[str] = Field(None, description="Teléfono del contacto")
     
     class Config:

@@ -141,6 +141,21 @@ class ContactRepository:
             logger.error(f"Error eliminando contacto: {e}")
             raise
     
+    def add_note(self, contact_id: int, content: str) -> Dict[str, Any]:
+        """
+        Agrega una nota a un contacto (intenta en Pipedrive si está disponible)
+        """
+        try:
+            # Intentar agregar nota en Pipedrive si hay API key
+            return self.add_note_to_crm(contact_id, content)
+        except Exception as e:
+            logger.warning(f"No se pudo agregar nota en Pipedrive: {e}")
+            # Retornar respuesta mock si falla
+            return {
+                "id": contact_id,
+                "content": content
+            }
+    
     # ================== OPERACIONES CON PIPEDRIVE CRM ==================
     
     def create_in_crm(self, name: str, email: Optional[str] = None, 

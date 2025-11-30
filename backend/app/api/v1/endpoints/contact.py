@@ -30,7 +30,7 @@ async def health_check(settings: Settings = Depends(get_settings)):
     logger.info("Health check endpoint")
     return HealthResponse(
         status="healthy",
-        timestamp=datetime.utcnow(),
+        timestamp=datetime.utcnow().isoformat(),
         crm_configured=settings.crm_configured
     )
 

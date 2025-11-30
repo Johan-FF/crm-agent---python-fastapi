@@ -75,7 +75,7 @@ app.middleware("http")(add_correlation_id)
 
 
 # Incluir routers
-app.include_router(v1_router.router)
+app.include_router(v1_router)
 
 
 # Endpoint raíz
