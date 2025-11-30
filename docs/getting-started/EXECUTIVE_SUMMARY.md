@@ -1,4 +1,4 @@
-# 📋 RESUMEN EJECUTIVO - Verticcal CRM Agent
+# 📋 RESUMEN EJECUTIVO -   CRM Agent
 
 **Prueba Técnica completada:** Sistema conversacional n8n + FastAPI + Pipedrive
 
@@ -17,7 +17,7 @@
   - Logging completo de todas las operaciones
 
 ### 2. Flujo n8n ✅
-- **Archivo:** `n8n-workflows/verticcal-crm-agent-workflow.json`
+- **Archivo:** `n8n-workflows/ -crm-agent-workflow.json`
 - **Características:**
   - Chat Trigger para capturar mensajes
   - Chat Memory para contexto conversacional
@@ -148,7 +148,7 @@ Verificación: Teléfono actualizado en Pipedrive
 ## 📁 Estructura de Archivos
 
 ```
-verticcal-crm-agent/
+ -crm-agent/
 ├── docs/                                  # Documentación organizada por tema
 │   ├── getting-started/
 │   │   ├── README.md                      # Guía principal
@@ -178,8 +178,8 @@ verticcal-crm-agent/
 │   └── .env.example                       # Ejemplo de configuración
 │
 ├── n8n-workflows/
-│   ├── verticcal-crm-agent-workflow.json  # Flujo n8n con OpenAI
-│   └── verticcal-crm-agent-workflow-openrouter.json # Flujo con Open Router
+│   ├──  -crm-agent-workflow.json  # Flujo n8n con OpenAI
+│   └──  -crm-agent-workflow-openrouter.json # Flujo con Open Router
 │
 ├── docker-compose.yml                     # Orquestación de servicios
 ├── .env.example                           # Variables de entorno

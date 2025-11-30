@@ -1,5 +1,5 @@
 """
-FastAPI Backend para Verticcal CRM Agent
+FastAPI Backend para CRM Agent
 
 NOTA: Este archivo ahora importa la aplicación del módulo refactorizado.
 La arquitectura ha sido refactorizada en una estructura modular bajo app/

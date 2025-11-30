@@ -1,4 +1,4 @@
-# 🧪 Guía de Testing - Verticcal CRM Agent
+# 🧪 Guía de Testing -   CRM Agent
 
 Este documento proporciona instrucciones detalladas para probar el sistema completo.
 

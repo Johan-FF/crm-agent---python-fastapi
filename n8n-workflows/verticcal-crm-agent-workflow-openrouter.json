@@ -1,5 +1,5 @@
 {
-  "name": "Verticcal CRM Agent - Chat Conversacional (Open Router)",
+  "name": "  CRM Agent - Chat Conversacional (Open Router)",
   "description": "Agente conversacional que interpreta órdenes para crear, actualizar y anotar contactos en Pipedrive, usando Open Router como LLM",
   "nodes": [
     {
@@ -121,11 +121,11 @@
             },
             {
               "name": "HTTP-Referer",
-              "value": "https://verticcal-crm-agent.local"
+              "value": "https:// -crm-agent.local"
             },
             {
               "name": "X-Title",
-              "value": "Verticcal CRM Agent"
+              "value": "  CRM Agent"
             }
           ]
         },

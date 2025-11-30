@@ -1,4 +1,4 @@
-# 📚 Índice de Documentación - Verticcal CRM Agent
+# 📚 Índice de Documentación -   CRM Agent
 
 > Navegación rápida a todos los documentos del proyecto
 
@@ -71,7 +71,7 @@
 ## 🗂️ Estructura del Código
 
 ```
-verticcal-crm-agent/
+ -crm-agent/
 │
 ├── 📁 docs/                           # 📚 Documentación organizada por tema
 │   ├── getting-started/
@@ -113,8 +113,8 @@ verticcal-crm-agent/
 │
 ├── 🤖 FLUJO N8N
 │   └── n8n-workflows/
-│       ├── verticcal-crm-agent-workflow.json                   # OpenAI original
-│       └── verticcal-crm-agent-workflow-openrouter.json        # Open Router (nuevo)
+│       ├──  -crm-agent-workflow.json                   # OpenAI original
+│       └──  -crm-agent-workflow-openrouter.json        # Open Router (nuevo)
 │
 └── 🛠️ UTILIDADES
     ├── validate_setup.py              # Validar installation
@@ -207,7 +207,7 @@ verticcal-crm-agent/
 # 2. Registrarse en https://openrouter.ai (5 min)
 # 3. Obtener API key en https://openrouter.ai/keys (1 min)
 # 4. Configurar .env con OPEN_ROUTER_API_KEY
-# 5. Importar verticcal-crm-agent-workflow-openrouter.json en n8n
+# 5. Importar  -crm-agent-workflow-openrouter.json en n8n
 # 6. Testear
 ```
 

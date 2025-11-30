@@ -8,7 +8,7 @@
    - ✅ Agregadas variables para Open Router
    - ✅ Documentación sobre modelos disponibles
 
-2. **`n8n-workflows/verticcal-crm-agent-workflow-openrouter.json`** (NUEVO)
+2. **`n8n-workflows/ -crm-agent-workflow-openrouter.json`** (NUEVO)
    - ✅ Workflow completo configurado para Open Router
    - ✅ Nodo HTTP Request apuntando a `https://openrouter.ai/api/v1/chat/completions`
    - ✅ Headers necesarios (Authorization, HTTP-Referer, X-Title)
@@ -56,7 +56,7 @@
    OPEN_ROUTER_API_KEY=sk-or-xxxxx
    OPEN_ROUTER_MODEL=openai/gpt-3.5-turbo
    ```
-4. Importar en n8n: `verticcal-crm-agent-workflow-openrouter.json`
+4. Importar en n8n: ` -crm-agent-workflow-openrouter.json`
 
 ### Opción 2: OpenAI (alternativa)
 
@@ -65,7 +65,7 @@
    ```
    OPENAI_API_KEY=sk-xxxxx
    ```
-3. Importar en n8n: `verticcal-crm-agent-workflow.json` (original)
+3. Importar en n8n: ` -crm-agent-workflow.json` (original)
 
 ---
 
@@ -76,7 +76,7 @@ Si ya tenías configurado OpenAI:
 1. Registrate en Open Router (5 min)
 2. Obtén tu API key (1 min)
 3. Actualiza `backend/.env` con `OPEN_ROUTER_API_KEY`
-4. Descarga e importa `verticcal-crm-agent-workflow-openrouter.json` en n8n
+4. Descarga e importa ` -crm-agent-workflow-openrouter.json` en n8n
 5. Listo
 
 **No necesitas cambiar nada en FastAPI**, solo cambia el flujo de n8n.
@@ -115,7 +115,7 @@ Para más información, ver:
 1. Lee `docs/setup-guides/OPENROUTER_SETUP.md`
 2. Registrate en https://openrouter.ai
 3. Configura tu API key en `backend/.env`
-4. Importa `verticcal-crm-agent-workflow-openrouter.json` en n8n
+4. Importa ` -crm-agent-workflow-openrouter.json` en n8n
 5. Testea los 3 casos de uso
 
 ¿Preguntas? Ver `docs/reference/FAQ.md` o `docs/setup-guides/OPENROUTER_SETUP.md`

@@ -15,7 +15,7 @@ class ContactCreate(BaseModel):
         examples = [
             {
                 "name": "Falcao García",
-                "email": "falcao@verticcal.com",
+                "email": "falcao@ .com",
                 "phone": "+57 300 123 4567"
             }
         ]

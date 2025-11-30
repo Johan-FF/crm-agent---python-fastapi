@@ -12,7 +12,7 @@ class Settings:
     """Configuración de la aplicación"""
     
     # API
-    API_TITLE: str = "Verticcal CRM Agent API"
+    API_TITLE: str = "CRM Agent API"
     API_DESCRIPTION: str = "Backend para orquestar n8n Chat Agent con CRM"
     API_VERSION: str = "2.0.0"
     
@@ -27,8 +27,11 @@ class Settings:
     OPEN_ROUTER_API_KEY: str = os.getenv("OPEN_ROUTER_API_KEY", "")
     OPEN_ROUTER_MODEL: str = os.getenv("OPEN_ROUTER_MODEL", "openai/gpt-3.5-turbo")
     
-    # Database (para expansión futura)
-    DATABASE_URL: str = os.getenv("DATABASE_URL", "sqlite:///./test.db")
+    # Database (PostgreSQL)
+    DATABASE_URL: str = os.getenv(
+        "DATABASE_URL",
+        "postgresql://crm_user:crm_password@localhost:5432/verticcal_crm"
+    )
     
     # Logging
     LOG_LEVEL: str = os.getenv("LOG_LEVEL", "INFO")

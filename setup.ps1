@@ -1,8 +1,8 @@
-# Setup Script para Verticcal CRM Agent (PowerShell)
+# Setup Script para CRM Agent (PowerShell)
 # Uso: .\setup.ps1
 
 Write-Host "================================" -ForegroundColor Cyan
-Write-Host "Verticcal CRM Agent - Setup" -ForegroundColor Cyan
+Write-Host " CRM Agent - Setup" -ForegroundColor Cyan
 Write-Host "================================" -ForegroundColor Cyan
 Write-Host ""
 

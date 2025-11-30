@@ -1,11 +1,11 @@
 #!/bin/bash
-# Setup Script para Verticcal CRM Agent
+# Setup Script para CRM Agent
 # Uso: ./setup.sh
 
 set -e
 
 echo "================================"
-echo "Verticcal CRM Agent - Setup"
+echo " CRM Agent - Setup"
 echo "================================"
 echo ""
 

@@ -25,7 +25,7 @@
 ```bash
 # Clonar (si tienes Git)
 git clone <repo-url>
-cd verticcal-crm-agent
+cd  -crm-agent
 
 # O descargar ZIP y descomprimir
 ```
@@ -105,7 +105,7 @@ docker-compose up -d n8n
 1. Abrir http://localhost:5678
 2. Crear cuenta si es primera vez
 3. Click **"Workflows"** → **"Import"**
-4. Seleccionar: `n8n-workflows/verticcal-crm-agent-workflow.json`
+4. Seleccionar: `n8n-workflows/ -crm-agent-workflow.json`
 5. Click **"Import"**
 
 ## 9️⃣ Configurar Credenciales n8n

@@ -1,23 +1,49 @@
 version: '3.8'
 
 services:
+  db:
+    image: postgres:16-alpine
+    container_name: verticcal-crm-postgres
+    environment:
+      POSTGRES_USER: ${DB_USER:-crm_user}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-crm_password}
+      POSTGRES_DB: ${DB_NAME:-verticcal_crm}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-crm_user}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - crm-network
+
   fastapi:
     build:
       context: ./backend
       dockerfile: Dockerfile
+    container_name: verticcal-crm-api
     ports:
       - "8000:8000"
     environment:
       - PIPEDRIVE_API_KEY=${PIPEDRIVE_API_KEY}
       - PIPEDRIVE_BASE_URL=https://api.pipedrive.com/v1
+      - DATABASE_URL=postgresql://${DB_USER:-crm_user}:${DB_PASSWORD:-crm_password}@db:5432/${DB_NAME:-verticcal_crm}
+      - LOG_LEVEL=INFO
     volumes:
       - ./backend:/app
     command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+    depends_on:
+      db:
+        condition: service_healthy
     networks:
-      - verticcal-network
+      - crm-network
 
   n8n:
     image: n8nio/n8n:latest
+    container_name: verticcal-crm-n8n
     ports:
       - "5678:5678"
     environment:
@@ -30,13 +56,14 @@ services:
       - n8n_storage:/home/node/.n8n
       - ./n8n-workflows:/workflows
     networks:
-      - verticcal-network
+      - crm-network
     depends_on:
       - fastapi
 
 networks:
-  verticcal-network:
+  crm-network:
     driver: bridge
 
 volumes:
   n8n_storage:
+  postgres_data:

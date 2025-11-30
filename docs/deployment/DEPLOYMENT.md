@@ -1,6 +1,6 @@
 # ☁️ Guía de Despliegue en la Nube
 
-Este documento explica opciones para desplegar Verticcal CRM Agent en producción.
+Este documento explica opciones para desplegar CRM Agent en producción.
 
 ## 🚀 Opción 1: Despliegue con Railway (Recomendado - Más Simple)
 
@@ -16,8 +16,8 @@ Railway es una plataforma que permite desplegar aplicaciones con un solo click.
    ```bash
    git init
    git add .
-   git commit -m "Initial commit: Verticcal CRM Agent"
-   git remote add origin https://github.com/tu-usuario/verticcal-crm-agent.git
+   git commit -m "Initial commit: CRM Agent"
+   git remote add origin https://github.com/tu-usuario/-crm-agent.git
    git push -u origin main
    ```
 
@@ -39,12 +39,12 @@ Railway es una plataforma que permite desplegar aplicaciones con un solo click.
 4. **Desplegar**
    - Railway automáticamente inicia el despliegue
    - Esperar a que termine
-   - Obtener URL pública (ej: `https://verticcal-crm.railway.app`)
+   - Obtener URL pública (ej: `https://crm.railway.app`)
 
 ### Usar FastAPI Desplegado con n8n Local
 1. En n8n, cambiar URLs HTTP de:
    - `http://localhost:8000` 
-   - a `https://verticcal-crm.railway.app`
+   - a `https://crm.railway.app`
 2. Guardar y testear
 
 ---
@@ -65,7 +65,7 @@ Railway es una plataforma que permite desplegar aplicaciones con un solo click.
 
 2. **Crear app en Heroku**
    ```bash
-   heroku create verticcal-crm-api
+   heroku create crm-api
    ```
 
 3. **Agregar variables de entorno**
@@ -106,13 +106,13 @@ Google Cloud Run permite ejecutar contenedores serverless (pagas por uso).
 
 2. **Construir imagen Docker**
    ```bash
-   gcloud builds submit --tag gcr.io/your-project/verticcal-crm
+   gcloud builds submit --tag gcr.io/your-project/crm
    ```
 
 3. **Desplegar en Cloud Run**
    ```bash
-   gcloud run deploy verticcal-crm \
-     --image gcr.io/your-project/verticcal-crm \
+   gcloud run deploy crm \
+     --image gcr.io/your-project/crm \
      --platform managed \
      --region us-central1 \
      --set-env-vars PIPEDRIVE_API_KEY=your_key
@@ -138,8 +138,8 @@ Si quieres desplegar todo (FastAPI + n8n) en un servidor VPS propio.
 1. **Clonar en el VPS**
    ```bash
    ssh user@your-server.com
-   git clone https://github.com/tu-usuario/verticcal-crm-agent.git
-   cd verticcal-crm-agent
+   git clone https://github.com/tu-usuario/crm-agent.git
+   cd crm-agent
    ```
 
 2. **Crear .env**
@@ -163,7 +163,7 @@ Si quieres desplegar todo (FastAPI + n8n) en un servidor VPS propio.
        environment:
          - PIPEDRIVE_API_KEY=${PIPEDRIVE_API_KEY}
        networks:
-         - verticcal-network
+         - crm-network
        restart: always
      
      n8n:
@@ -175,7 +175,7 @@ Si quieres desplegar todo (FastAPI + n8n) en un servidor VPS propio.
        volumes:
          - n8n_storage:/home/node/.n8n
        networks:
-         - verticcal-network
+         - crm-network
        restart: always
      
      nginx:
@@ -187,14 +187,14 @@ Si quieres desplegar todo (FastAPI + n8n) en un servidor VPS propio.
          - ./nginx.conf:/etc/nginx/nginx.conf:ro
          - ./certs:/etc/nginx/certs:ro
        networks:
-         - verticcal-network
+         - crm-network
        depends_on:
          - fastapi
          - n8n
        restart: always
    
    networks:
-     verticcal-network:
+     crm-network:
    
    volumes:
      n8n_storage:

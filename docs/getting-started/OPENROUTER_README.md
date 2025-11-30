@@ -37,7 +37,7 @@ El cambio de **OpenAI a Open Router** ha sido completado exitosamente.
 
 ### 2. Archivos nuevos (3)
 
-**`n8n-workflows/verticcal-crm-agent-workflow-openrouter.json`** ⭐
+**`n8n-workflows/ -crm-agent-workflow-openrouter.json`** ⭐
 - ✅ Workflow completo para Open Router
 - ✅ Nodo HTTP Request configurado: `https://openrouter.ai/api/v1/chat/completions`
 - ✅ Headers correctos (Authorization, HTTP-Referer, X-Title)
@@ -65,7 +65,7 @@ El cambio de **OpenAI a Open Router** ha sido completado exitosamente.
 
 ### ✅ Opción 1: Open Router (RECOMENDADO)
 
-**Archivo**: `n8n-workflows/verticcal-crm-agent-workflow-openrouter.json`
+**Archivo**: `n8n-workflows/ -crm-agent-workflow-openrouter.json`
 
 **Ventajas:**
 - 💰 50-60x más barato (GPT-3.5-turbo)
@@ -86,7 +86,7 @@ El cambio de **OpenAI a Open Router** ha sido completado exitosamente.
 
 ### ✅ Opción 2: OpenAI Directo (Original)
 
-**Archivo**: `n8n-workflows/verticcal-crm-agent-workflow.json`
+**Archivo**: `n8n-workflows/ -crm-agent-workflow.json`
 
 **Ventajas:**
 - ⚡ API más confiable
@@ -120,7 +120,7 @@ El cambio de **OpenAI a Open Router** ha sido completado exitosamente.
    OPEN_ROUTER_MODEL=openai/gpt-3.5-turbo
    ↓
 5. Importa en n8n:
-   verticcal-crm-agent-workflow-openrouter.json
+    -crm-agent-workflow-openrouter.json
    ↓
 6. Testea los 3 casos de uso (5 min)
    ↓
@@ -131,14 +131,14 @@ El cambio de **OpenAI a Open Router** ha sido completado exitosamente.
 
 ```
 Opción A: Mantener OpenAI
-├─ Importa: verticcal-crm-agent-workflow.json
+├─ Importa:  -crm-agent-workflow.json
 └─ Sin cambios en backend/.env
 
 Opción B: Cambiar a Open Router
 ├─ Registrate en https://openrouter.ai (5 min)
 ├─ Obtén API key
 ├─ Actualiza backend/.env
-├─ Importa: verticcal-crm-agent-workflow-openrouter.json
+├─ Importa:  -crm-agent-workflow-openrouter.json
 └─ ¡Listo! (Más económico)
 ```
 

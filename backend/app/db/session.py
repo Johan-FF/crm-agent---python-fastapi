@@ -1,16 +1,18 @@
 """
-Gestión de sesiones de base de datos
+Gestión de sesiones de base de datos con SQLAlchemy
 """
-from typing import AsyncGenerator
-from app.db.base import DatabaseConnection, DATABASE_URL
-from app.db.init_db import init_db, close_db
-
-# Instancia de conexión a la base de datos
-db = DatabaseConnection(DATABASE_URL)
+from typing import AsyncGenerator, Generator
+from sqlalchemy.orm import Session
+from app.db.base import SessionLocal, init_db, close_db
 
 
-async def get_db() -> AsyncGenerator:
+def get_db() -> Generator[Session, None, None]:
     """
     Dependencia para inyectar la sesión de base de datos en endpoints
+    Uso: db: Session = Depends(get_db)
     """
-    yield db
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()

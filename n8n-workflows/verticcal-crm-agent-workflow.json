@@ -1,5 +1,5 @@
 {
-  "name": "Verticcal CRM Agent - Chat Conversacional",
+  "name": "  CRM Agent - Chat Conversacional",
   "description": "Agente conversacional que interpreta órdenes para crear, actualizar y anotar contactos en Pipedrive",
   "nodes": [
     {

@@ -1,1 +1,1 @@
-"""Verticcal CRM Agent API - FastAPI Application"""
+"""CRM Agent API - FastAPI Application"""

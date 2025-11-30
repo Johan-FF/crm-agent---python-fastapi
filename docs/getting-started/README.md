@@ -1,4 +1,4 @@
-# Verticcal CRM Agent 🤖
+#   CRM Agent 🤖
 
 Sistema conversacional integrado con n8n, FastAPI y Pipedrive que permite gestionar contactos mediante Chat Agent inteligente.
 
@@ -55,7 +55,7 @@ Este proyecto implementa un agente conversacional que interpreta órdenes natura
 
 ```bash
 git clone <repository-url>
-cd verticcal-crm-agent
+cd  -crm-agent
 ```
 
 ### 2. Configurar Variables de Entorno
@@ -115,7 +115,7 @@ n8n estará disponible en `http://localhost:5678`
 
 1. Abrir n8n en `http://localhost:5678`
 2. Click en **"New Workflow"** → **"Import from File"**
-3. Seleccionar `n8n-workflows/verticcal-crm-agent-workflow-openrouter.json`
+3. Seleccionar `n8n-workflows/ -crm-agent-workflow-openrouter.json`
 4. Completar credenciales:
    - **Open Router API Key**: Tu clave de Open Router (desde https://openrouter.ai/keys)
    - **Endpoint HTTP**: `http://localhost:8000` (si corres localmente)
@@ -125,7 +125,7 @@ n8n estará disponible en `http://localhost:5678`
 
 1. Abrir n8n en `http://localhost:5678`
 2. Click en **"New Workflow"** → **"Import from File"**
-3. Seleccionar `n8n-workflows/verticcal-crm-agent-workflow.json`
+3. Seleccionar `n8n-workflows/ -crm-agent-workflow.json`
 4. Completar credenciales:
    - **OpenAI API Key**: Tu clave de OpenAI
    - **Endpoint HTTP**: `http://localhost:8000`

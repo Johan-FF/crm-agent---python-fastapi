@@ -26,7 +26,7 @@
 
 1. Una vez logueado, ve a **[https://openrouter.ai/keys](https://openrouter.ai/keys)**
 2. Haz clic en **"Create new"** (o "Create API Key")
-3. Dale un nombre descriptivo: `verticcal-crm-agent`
+3. Dale un nombre descriptivo: ` -crm-agent`
 4. Copia la API key completa (no la pierda)
 
 **Formato esperado:**
@@ -188,8 +188,8 @@ Auth:       Bearer Token (OPEN_ROUTER_API_KEY)
 
 Headers:
 - Authorization: Bearer {API_KEY}
-- HTTP-Referer: https://verticcal-crm-agent.local
-- X-Title: Verticcal CRM Agent
+- HTTP-Referer: https:// -crm-agent.local
+- X-Title:   CRM Agent
 
 Body:
 {
@@ -224,7 +224,7 @@ Body:
 1. ✅ Registrate en Open Router
 2. ✅ Obtén tu API key
 3. ✅ Configura `.env` con la API key
-4. ✅ Importa el workflow `verticcal-crm-agent-workflow-openrouter.json` en n8n
+4. ✅ Importa el workflow ` -crm-agent-workflow-openrouter.json` en n8n
 5. ✅ Testea los 3 casos de uso
 
 **¿Preguntas?** Ver documentación completa en `docs/reference/FAQ.md`

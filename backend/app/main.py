@@ -10,7 +10,7 @@ from contextlib import asynccontextmanager
 from app.core.config import settings
 from app.core.dependencies import add_correlation_id
 from app.api.v1 import router as v1_router
-from app.db.session import init_db, close_db
+from app.db.base import init_db, close_db
 
 # Configurar logging
 logging.basicConfig(
@@ -25,17 +25,32 @@ logger = logging.getLogger(__name__)
 async def lifespan(app: FastAPI):
     """
     Maneja el ciclo de vida de la aplicación
+    - Startup: Inicializa la base de datos PostgreSQL
+    - Shutdown: Cierra las conexiones
     """
     # Startup
     logger.info("Iniciando aplicación...")
     logger.info(f"CRM configurado: {settings.crm_configured}")
     logger.info(f"Modo mock: {settings.is_mock_mode}")
-    await init_db()
+    logger.info("Inicializando base de datos PostgreSQL...")
+    
+    try:
+        # Inicializar BD (crea tablas si no existen)
+        init_db()
+        logger.info("✓ Base de datos inicializada correctamente")
+    except Exception as e:
+        logger.error(f"✗ Error al inicializar base de datos: {e}")
+        raise
+    
     yield
     
     # Shutdown
     logger.info("Cerrando aplicación...")
-    await close_db()
+    try:
+        close_db()
+        logger.info("✓ Conexiones de base de datos cerradas")
+    except Exception as e:
+        logger.error(f"✗ Error al cerrar base de datos: {e}")
 
 
 # Crear aplicación FastAPI
@@ -67,13 +82,14 @@ app.include_router(v1_router.router)
 @app.get("/")
 async def root():
     """
-    Endpoint raíz
+    Endpoint raíz - Bienvenida a la API
     """
     return {
-        "message": "Verticcal CRM Agent API",
+        "message": "CRM Agent API",
         "version": settings.API_VERSION,
         "docs": "/docs",
-        "api": "/api/v1"
+        "api": "/api/v1",
+        "database": "PostgreSQL"
     }
 
 
