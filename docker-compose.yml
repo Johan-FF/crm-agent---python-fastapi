@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  fastapi:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - PIPEDRIVE_API_KEY=${PIPEDRIVE_API_KEY}
+      - PIPEDRIVE_BASE_URL=https://api.pipedrive.com/v1
+    volumes:
+      - ./backend:/app
+    command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+    networks:
+      - verticcal-network
+
+  n8n:
+    image: n8nio/n8n:latest
+    ports:
+      - "5678:5678"
+    environment:
+      - N8N_HOST=localhost
+      - N8N_PORT=5678
+      - NODE_ENV=production
+      - WEBHOOK_TUNNEL_URL=http://localhost:5678/
+      - GENERIC_FUNCTION_ALLOW_EXTERNAL_REQUEST_DENIED_URLS=
+    volumes:
+      - n8n_storage:/home/node/.n8n
+      - ./n8n-workflows:/workflows
+    networks:
+      - verticcal-network
+    depends_on:
+      - fastapi
+
+networks:
+  verticcal-network:
+    driver: bridge
+
+volumes:
+  n8n_storage:

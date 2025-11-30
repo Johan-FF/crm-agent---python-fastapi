@@ -1,0 +1,332 @@
+{
+  "name": "Verticcal CRM Agent - Chat Conversacional",
+  "description": "Agente conversacional que interpreta órdenes para crear, actualizar y anotar contactos en Pipedrive",
+  "nodes": [
+    {
+      "parameters": {
+        "sessionIdType": "url",
+        "options": {}
+      },
+      "id": "n8n-nodes-base.chatTrigger",
+      "name": "Chat Trigger",
+      "type": "n8n-nodes-base.chatTrigger",
+      "typeVersion": 1,
+      "position": [
+        250,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "model": "gpt-4",
+        "options": {
+          "temperature": 0.7
+        }
+      },
+      "id": "n8n-nodes-base.openaiChatModel",
+      "name": "OpenAI Chat Model (GPT-4)",
+      "type": "n8n-nodes-base.openaiChatModel",
+      "typeVersion": 1,
+      "position": [
+        750,
+        300
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "YOUR_OPENAI_CREDENTIALS",
+          "name": "OpenAI API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "n8n-nodes-base.chatMemory",
+      "name": "Chat Memory",
+      "type": "n8n-nodes-base.chatMemory",
+      "typeVersion": 1,
+      "position": [
+        500,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "tools": [
+          {
+            "displayName": "Crear Contacto",
+            "name": "create_contact",
+            "description": "Crea un nuevo contacto en el CRM con nombre, email y/o teléfono",
+            "isRequired": ["name"],
+            "properties": [
+              {
+                "displayName": "Nombre",
+                "name": "name",
+                "required": true,
+                "type": "string",
+                "description": "Nombre completo del contacto"
+              },
+              {
+                "displayName": "Email",
+                "name": "email",
+                "required": false,
+                "type": "string",
+                "description": "Email del contacto"
+              },
+              {
+                "displayName": "Teléfono",
+                "name": "phone",
+                "required": false,
+                "type": "string",
+                "description": "Número de teléfono del contacto"
+              }
+            ]
+          },
+          {
+            "displayName": "Agregar Nota",
+            "name": "add_note",
+            "description": "Agrega una nota a un contacto existente",
+            "isRequired": ["contact_id", "content"],
+            "properties": [
+              {
+                "displayName": "ID del Contacto",
+                "name": "contact_id",
+                "required": true,
+                "type": "number",
+                "description": "ID numérico del contacto en el CRM"
+              },
+              {
+                "displayName": "Contenido de la Nota",
+                "name": "content",
+                "required": true,
+                "type": "string",
+                "description": "Texto de la nota"
+              }
+            ]
+          },
+          {
+            "displayName": "Actualizar Contacto",
+            "name": "update_contact",
+            "description": "Actualiza uno o más campos de un contacto existente",
+            "isRequired": ["contact_id", "fields"],
+            "properties": [
+              {
+                "displayName": "ID del Contacto",
+                "name": "contact_id",
+                "required": true,
+                "type": "number",
+                "description": "ID numérico del contacto"
+              },
+              {
+                "displayName": "Campos a Actualizar (JSON)",
+                "name": "fields",
+                "required": true,
+                "type": "string",
+                "description": "JSON con campos, ej: {\"phone\": \"+57 300 000 0000\", \"status\": \"Qualified\"}"
+              }
+            ]
+          }
+        ]
+      },
+      "id": "n8n-nodes-base.toolsLanguageModel",
+      "name": "AI Tools",
+      "type": "n8n-nodes-base.toolsLanguageModel",
+      "typeVersion": 1,
+      "position": [
+        600,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "url": "http://localhost:8000/crm/contact",
+        "authentication": "none",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParametersJson": "={\"name\": $json.name, \"email\": $json.email, \"phone\": $json.phone}",
+        "options": {}
+      },
+      "id": "n8n-nodes-base.httpRequest",
+      "name": "HTTP - Create Contact",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [
+        950,
+        150
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "url": "http://localhost:8000/crm/contact/note",
+        "authentication": "none",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParametersJson": "={\"contact_id\": $json.contact_id, \"content\": $json.content}",
+        "options": {}
+      },
+      "id": "n8n-nodes-base.httpRequest_1",
+      "name": "HTTP - Add Note",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [
+        950,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "PATCH",
+        "url": "http://localhost:8000/crm/contact",
+        "authentication": "none",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParametersJson": "={\"contact_id\": $json.contact_id, \"fields\": JSON.parse($json.fields)}",
+        "options": {}
+      },
+      "id": "n8n-nodes-base.httpRequest_2",
+      "name": "HTTP - Update Contact",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [
+        950,
+        450
+      ]
+    }
+  ],
+  "connections": {
+    "Chat Trigger": {
+      "main": [
+        [
+          {
+            "node": "Chat Memory",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Chat Memory": {
+      "main": [
+        [
+          {
+            "node": "AI Tools",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Tools": {
+      "main": [
+        [
+          {
+            "node": "OpenAI Chat Model (GPT-4)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ],
+      "ai_tool_create_contact": [
+        [
+          {
+            "node": "HTTP - Create Contact",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ],
+      "ai_tool_add_note": [
+        [
+          {
+            "node": "HTTP - Add Note",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ],
+      "ai_tool_update_contact": [
+        [
+          {
+            "node": "HTTP - Update Contact",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP - Create Contact": {
+      "main": [
+        [
+          {
+            "node": "Chat Memory",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP - Add Note": {
+      "main": [
+        [
+          {
+            "node": "Chat Memory",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP - Update Contact": {
+      "main": [
+        [
+          {
+            "node": "Chat Memory",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model (GPT-4)": {
+      "main": [
+        [
+          {
+            "node": "Chat Memory",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

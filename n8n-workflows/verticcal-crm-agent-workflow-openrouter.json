@@ -1,0 +1,337 @@
+{
+  "name": "Verticcal CRM Agent - Chat Conversacional (Open Router)",
+  "description": "Agente conversacional que interpreta órdenes para crear, actualizar y anotar contactos en Pipedrive, usando Open Router como LLM",
+  "nodes": [
+    {
+      "parameters": {
+        "sessionIdType": "url",
+        "options": {}
+      },
+      "id": "n8n-nodes-base.chatTrigger",
+      "name": "Chat Trigger",
+      "type": "n8n-nodes-base.chatTrigger",
+      "typeVersion": 1,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "n8n-nodes-base.chatMemory",
+      "name": "Chat Memory",
+      "type": "n8n-nodes-base.chatMemory",
+      "typeVersion": 1,
+      "position": [500, 300]
+    },
+    {
+      "parameters": {
+        "tools": [
+          {
+            "displayName": "Crear Contacto",
+            "name": "create_contact",
+            "description": "Crea un nuevo contacto en el CRM con nombre, email y/o teléfono",
+            "isRequired": ["name"],
+            "properties": [
+              {
+                "displayName": "Nombre",
+                "name": "name",
+                "required": true,
+                "type": "string",
+                "description": "Nombre completo del contacto"
+              },
+              {
+                "displayName": "Email",
+                "name": "email",
+                "required": false,
+                "type": "string",
+                "description": "Email del contacto"
+              },
+              {
+                "displayName": "Teléfono",
+                "name": "phone",
+                "required": false,
+                "type": "string",
+                "description": "Número de teléfono del contacto"
+              }
+            ]
+          },
+          {
+            "displayName": "Agregar Nota",
+            "name": "add_note",
+            "description": "Agrega una nota a un contacto existente",
+            "isRequired": ["contact_id", "content"],
+            "properties": [
+              {
+                "displayName": "ID del Contacto",
+                "name": "contact_id",
+                "required": true,
+                "type": "number",
+                "description": "ID numérico del contacto en el CRM"
+              },
+              {
+                "displayName": "Contenido de la Nota",
+                "name": "content",
+                "required": true,
+                "type": "string",
+                "description": "Texto de la nota a agregar"
+              }
+            ]
+          },
+          {
+            "displayName": "Actualizar Contacto",
+            "name": "update_contact",
+            "description": "Actualiza campos específicos de un contacto existente",
+            "isRequired": ["contact_id"],
+            "properties": [
+              {
+                "displayName": "ID del Contacto",
+                "name": "contact_id",
+                "required": true,
+                "type": "number",
+                "description": "ID numérico del contacto a actualizar"
+              },
+              {
+                "displayName": "Campos a Actualizar (JSON)",
+                "name": "fields",
+                "required": true,
+                "type": "string",
+                "description": "Objeto JSON con campos a actualizar. Ej: {\"phone\": \"+57 300\", \"status\": \"Qualified\"}"
+              }
+            ]
+          }
+        ]
+      },
+      "id": "n8n-nodes-base.toolsLanguageModel",
+      "name": "AI Tools",
+      "type": "n8n-nodes-base.toolsLanguageModel",
+      "typeVersion": 1,
+      "position": [750, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://openrouter.ai/api/v1/chat/completions",
+        "authentication": "none",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer={{ $env.OPEN_ROUTER_API_KEY }}"
+            },
+            {
+              "name": "HTTP-Referer",
+              "value": "https://verticcal-crm-agent.local"
+            },
+            {
+              "name": "X-Title",
+              "value": "Verticcal CRM Agent"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "model",
+              "value": "={{ $env.OPEN_ROUTER_MODEL || 'openai/gpt-3.5-turbo' }}"
+            },
+            {
+              "name": "messages",
+              "value": "={{ $json.messages }}"
+            },
+            {
+              "name": "tools",
+              "value": "={{ $json.tools }}"
+            },
+            {
+              "name": "tool_choice",
+              "value": "auto"
+            },
+            {
+              "name": "temperature",
+              "value": 0.7
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "n8n-nodes-base.httpRequest",
+      "name": "Open Router API Request",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [1000, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://localhost:8000/crm/contact",
+        "authentication": "none",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "name",
+              "value": "={{ $json.tool_input.name }}"
+            },
+            {
+              "name": "email",
+              "value": "={{ $json.tool_input.email }}"
+            },
+            {
+              "name": "phone",
+              "value": "={{ $json.tool_input.phone }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "n8n-nodes-base.httpRequest1",
+      "name": "HTTP - Create Contact",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [1250, 100]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://localhost:8000/crm/contact/note",
+        "authentication": "none",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "contact_id",
+              "value": "={{ $json.tool_input.contact_id }}"
+            },
+            {
+              "name": "content",
+              "value": "={{ $json.tool_input.content }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "n8n-nodes-base.httpRequest2",
+      "name": "HTTP - Add Note",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [1250, 300]
+    },
+    {
+      "parameters": {
+        "method": "PATCH",
+        "url": "http://localhost:8000/crm/contact",
+        "authentication": "none",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "contact_id",
+              "value": "={{ $json.tool_input.contact_id }}"
+            },
+            {
+              "name": "fields",
+              "value": "={{ JSON.parse($json.tool_input.fields) }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "n8n-nodes-base.httpRequest3",
+      "name": "HTTP - Update Contact",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [1250, 500]
+    }
+  ],
+  "connections": {
+    "Chat Trigger": {
+      "main": [
+        [
+          {
+            "node": "Chat Memory",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Chat Memory": {
+      "main": [
+        [
+          {
+            "node": "AI Tools",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Tools": {
+      "main": [
+        [
+          {
+            "node": "Open Router API Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Open Router API Request": {
+      "main": [
+        [
+          {
+            "node": "HTTP - Create Contact",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "HTTP - Add Note",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "HTTP - Update Contact",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP - Create Contact": {
+      "main": [
+        [
+          {
+            "node": "Chat Memory",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP - Add Note": {
+      "main": [
+        [
+          {
+            "node": "Chat Memory",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP - Update Contact": {
+      "main": [
+        [
+          {
+            "node": "Chat Memory",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}
