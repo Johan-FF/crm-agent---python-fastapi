@@ -6,7 +6,7 @@
 
 ```bash
 # Clonar o entrar al directorio del proyecto
-cd verticcal-crm-agent
+cd crm-agent
 
 # Copiar archivo de configuración (si es primera vez)
 cp .env.example .env

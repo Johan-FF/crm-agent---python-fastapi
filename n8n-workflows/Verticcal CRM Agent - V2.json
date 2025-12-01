@@ -5,13 +5,13 @@
       "parameters": {
         "options": {}
       },
-      "id": "3511283b-a807-4537-b6f2-914a83fa4fca",
+      "id": "5f63c7d2-8220-4d3f-9f9e-46e7e7378fa1",
       "name": "When chat message received",
       "type": "@n8n/n8n-nodes-langchain.chatTrigger",
       "typeVersion": 1.1,
       "position": [
-        -272,
-        -176
+        -880,
+        -288
       ],
       "webhookId": "e67c3257-eb66-4117-86c4-2e44b0a8d884"
     },
@@ -23,13 +23,13 @@
           "temperature": 0.3
         }
       },
-      "id": "3c3f6c71-9b4e-4285-bc80-004476de6e56",
+      "id": "e723dc99-e4b2-4699-b980-f804b65d12e3",
       "name": "OpenAI Chat Model",
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1,
       "position": [
-        -16,
-        48
+        -624,
+        -64
       ],
       "credentials": {
         "openAiApi": {
@@ -39,41 +39,30 @@
       }
     },
     {
-      "parameters": {},
-      "id": "f9b12ef1-7ba1-4cf6-b317-d9b7c75e22cb",
-      "name": "Window Buffer Memory",
-      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
-      "typeVersion": 1.2,
-      "position": [
-        176,
-        224
-      ]
-    },
-    {
       "parameters": {
         "promptType": "define",
         "text": "=INSTRUCCIONES CRÍTICAS - DEBES SEGUIR ESTE FORMATO EXACTO:\n\nCuando el usuario pida CREAR un contacto:\n- Respuesta: TOOL:CREATE_CONTACT|[nombre completo]|[email]|[teléfono]\n- Ejemplo: Usuario dice \"Crea a Juan Pérez con email juan@mail.com y teléfono +57 300 111 2222\"\n- Tu respuesta EXACTA: TOOL:CREATE_CONTACT|Juan Pérez|juan@mail.com|+57 300 111 2222\n\nCuando el usuario pida AGREGAR NOTA a un contacto que ACABA DE CREAR (está en memoria):\n- Respuesta: TOOL:ADD_NOTE|[nombre o email o teléfono del contacto]|[texto de la nota]\n- Ejemplo: Usuario dice \"Agrega nota a Falcao García: Cliente interesado en plan premium\"\n- Tu respuesta EXACTA: TOOL:ADD_NOTE|Falcao García|Cliente interesado en plan premium\n- Ejemplo 2: Usuario dice \"Agrega nota a falcao@verticcal.com que llamó ayer\"\n- Tu respuesta EXACTA: TOOL:ADD_NOTE|falcao@verticcal.com|Llamó ayer\n\nCuando el usuario pida ACTUALIZAR un contacto que ACABA DE CREAR (está en memoria):\n- Respuesta: TOOL:UPDATE_CONTACT|[nombre o email o teléfono del contacto]|[campo]|[nuevo_valor]\n- Ejemplo: Usuario dice \"Actualiza el teléfono de Juan Pérez a +57 301 999 8888\"\n- Tu respuesta EXACTA: TOOL:UPDATE_CONTACT|Juan Pérez|phone|+57 301 999 8888\n\nNO AGREGUES TEXTO ADICIONAL. NO EXPLIQUES. SOLO RESPONDE CON EL FORMATO TOOL:ACCION|PARAMETROS.\n\nMensaje del usuario: {{ $json.chatInput }}"
       },
-      "id": "49fdfe56-b47f-45fb-9acc-1adf39b24691",
+      "id": "cca13f9f-4704-4c3e-ae00-81fdd5a523cf",
       "name": "Conversational Agent",
       "type": "@n8n/n8n-nodes-langchain.chainLlm",
       "typeVersion": 1.4,
       "position": [
-        -32,
-        -176
+        -640,
+        -288
       ]
     },
     {
       "parameters": {
         "jsCode": "const output = $input.item.json.text;\nconst parts = output.split('|');\n\nreturn {\n  name: parts[1]?.trim() || '',\n  email: parts[2]?.trim() || '',\n  phone: parts[3]?.trim() || ''\n};"
       },
-      "id": "5b2e41cd-7793-4d44-82fc-06208fa1a902",
+      "id": "face48b5-5751-4a39-a255-e7d5a5193d6a",
       "name": "Parse Create Data",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        592,
-        -384
+        -16,
+        -496
       ]
     },
     {
@@ -85,13 +74,13 @@
         "jsonBody": "={{ JSON.stringify($json) }}",
         "options": {}
       },
-      "id": "307ae8ff-2792-4ae3-bfae-291ccf18c6d9",
+      "id": "1788c5de-6d83-4076-8c1e-6275c0a492cd",
       "name": "HTTP Create Contact",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        800,
-        -384
+        192,
+        -496
       ],
       "continueOnFail": true
     },
@@ -99,26 +88,54 @@
       "parameters": {
         "jsCode": "const item = $input.item;\nconst parsedData = $('Parse Create Data').first().json;\n\n// Verificar si hubo error\nif (item.json.error) {\n  // Extraer el mensaje de error del response\n  const errorData = item.json.error;\n  const errorMsg = errorData.message || JSON.stringify(errorData);\n  const idMatch = errorMsg.match(/ID:\\s*(\\d+)/);\n  \n  if (idMatch) {\n    return {\n      id: parseInt(idMatch[1]),\n      name: parsedData.name,\n      email: parsedData.email,\n      phone: parsedData.phone,\n      already_exists: true\n    };\n  }\n  \n  throw new Error(errorMsg);\n}\n\n// Si no hay error, contacto creado exitosamente\nconst response = item.json;\nreturn {\n  id: response.id,\n  name: response.name || parsedData.name,\n  email: response.email || parsedData.email,\n  phone: response.phone || parsedData.phone,\n  already_exists: false\n};"
       },
-      "id": "e2f20ed0-0a48-4dfa-8d3e-2973ade4dd65",
+      "id": "f6ed3d08-d93a-4426-85be-fb2bcab5f354",
       "name": "Handle Create Response",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        976,
-        -384
+        368,
+        -496
       ]
     },
     {
       "parameters": {
-        "jsCode": "const output = $input.item.json.text;\nconst parts = output.split('|');\nconst identifier = parts[1]?.trim() || '';\nconst content = parts[2]?.trim() || '';\n\n// Buscar en la memoria del workflow el ID del contacto creado\nconst memory = $('Window Buffer Memory').all();\nlet contactId = null;\n\n// Buscar en ejecuciones anteriores del workflow\nconst createResults = $('HTTP Create Contact').all();\nfor (const result of createResults) {\n  const contact = result.json;\n  if (contact.name?.toLowerCase().includes(identifier.toLowerCase()) ||\n      contact.email?.toLowerCase() === identifier.toLowerCase() ||\n      contact.phone === identifier) {\n    contactId = contact.id;\n    break;\n  }\n}\n\nif (!contactId) {\n  throw new Error(`No se encontró el contacto \"${identifier}\" en la sesión actual. Por favor, proporciona el ID numérico del contacto.`);\n}\n\nreturn {\n  contact_id: contactId,\n  content: content\n};"
+        "jsCode": "const output = $input.item.json.text;\nconst parts = output.split('|');\nconst identifier = parts[1]?.trim() || '';\nconst content = parts[2]?.trim() || '';\n\nlet contactId = null;\n\n// Buscar en memoria del workflow (Handle Create Response)\ntry {\n  const createResults = $('Handle Create Response').all();\n  for (const result of createResults) {\n    const contact = result.json;\n    if (contact.name?.toLowerCase().includes(identifier.toLowerCase()) ||\n        contact.email?.toLowerCase() === identifier.toLowerCase() ||\n        contact.phone === identifier) {\n      contactId = contact.id;\n      break;\n    }\n  }\n} catch (e) {\n  // Nodo no ejecutado todavía\n}\n\n// Si encontró en memoria, retornar directamente\nif (contactId) {\n  return {\n    contact_id: contactId,\n    content: content,\n    found_in_memory: true\n  };\n}\n\n// Si no encontró, preparar para búsqueda HTTP\nreturn {\n  identifier: identifier,\n  content: content,\n  found_in_memory: false\n};"
       },
-      "id": "9f99057f-20da-4719-a01e-dff6c6804c68",
+      "id": "a9ac1539-b6e8-4987-980c-1c2314b6b0e0",
       "name": "Parse Note Data",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        576,
-        -192
+        -32,
+        -304
+      ]
+    },
+    {
+      "parameters": {
+        "url": "=http://host.docker.internal:8000/api/v1/contact/search?q={{ $json.identifier }}",
+        "options": {}
+      },
+      "id": "46eb5791-942d-4566-a41a-93487802e76d",
+      "name": "HTTP Search Contact (Note)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -16,
+        -112
+      ],
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "jsCode": "const identifier = $('Parse Note Data').first().json.identifier;\nconst content = $('Parse Note Data').first().json.content;\n\n// Si HTTP Search tuvo éxito, usar ese ID\nif ($input.item.json.id) {\n  return {\n    contact_id: $input.item.json.id,\n    content: content\n  };\n}\n\n// Si falló, el contacto no existe\nthrow new Error(`No se encontró el contacto \"${identifier}\". Por favor verifica el nombre, email o teléfono.`);"
+      },
+      "id": "5320f51a-49fc-49c2-819a-06325f23dc9f",
+      "name": "Resolve Note Contact",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        288,
+        -144
       ]
     },
     {
@@ -130,26 +147,56 @@
         "jsonBody": "={{ JSON.stringify($json) }}",
         "options": {}
       },
-      "id": "61c33ba9-3a34-48a1-84a6-ec3b093a9309",
+      "id": "57e00b6f-728f-4efb-829c-5452d930ffae",
       "name": "HTTP Add Note",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        800,
-        -192
-      ]
+        192,
+        -304
+      ],
+      "alwaysOutputData": false,
+      "onError": "continueRegularOutput"
     },
     {
       "parameters": {
-        "jsCode": "const output = $input.item.json.text;\nconst parts = output.split('|');\nconst identifier = parts[1]?.trim() || '';\nconst field = parts[2]?.trim() || '';\nconst value = parts[3]?.trim() || '';\n\n// Buscar en ejecuciones anteriores del workflow\nconst createResults = $('HTTP Create Contact').all();\nlet contactId = null;\n\nfor (const result of createResults) {\n  const contact = result.json;\n  if (contact.name?.toLowerCase().includes(identifier.toLowerCase()) ||\n      contact.email?.toLowerCase() === identifier.toLowerCase() ||\n      contact.phone === identifier) {\n    contactId = contact.id;\n    break;\n  }\n}\n\nif (!contactId) {\n  throw new Error(`No se encontró el contacto \"${identifier}\" en la sesión actual. Por favor, proporciona el ID numérico del contacto.`);\n}\n\nconst data = {\n  contact_id: contactId\n};\n\nif (field) {\n  data[field] = value;\n}\n\nreturn data;"
+        "jsCode": "const output = $input.item.json.text;\nconst parts = output.split('|');\nconst identifier = parts[1]?.trim() || '';\nconst field = parts[2]?.trim() || '';\nconst value = parts[3]?.trim() || '';\n\nlet contactId = null;\n\n// Buscar en memoria del workflow (Handle Create Response)\ntry {\n  const createResults = $('Handle Create Response').all();\n  for (const result of createResults) {\n    const contact = result.json;\n    if (contact.name?.toLowerCase().includes(identifier.toLowerCase()) ||\n        contact.email?.toLowerCase() === identifier.toLowerCase() ||\n        contact.phone === identifier) {\n      contactId = contact.id;\n      break;\n    }\n  }\n} catch (e) {\n  // Nodo no ejecutado todavía\n}\n\n// Si encontró en memoria, retornar directamente\nif (contactId) {\n  const data = {\n    contact_id: contactId,\n    found_in_memory: true\n  };\n  \n  if (field) {\n    data[field] = value;\n  }\n  \n  return data;\n}\n\n// Si no encontró, preparar para búsqueda HTTP\nreturn {\n  identifier: identifier,\n  field: field,\n  value: value,\n  found_in_memory: false\n};"
       },
-      "id": "404ca086-4b0b-4345-be95-56dd4a4d0fc0",
+      "id": "8a034a52-ab78-40e3-9868-8166b6319aef",
       "name": "Parse Update Data",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        576,
-        16
+        -32,
+        112
+      ]
+    },
+    {
+      "parameters": {
+        "url": "=http://host.docker.internal:8000/api/v1/contact/search?q={{ $json.identifier }}",
+        "options": {}
+      },
+      "id": "c2345853-f603-4ec3-8261-9650cd4bbb47",
+      "name": "HTTP Search Contact (Update)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        48,
+        320
+      ],
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "jsCode": "const identifier = $('Parse Update Data').first().json.identifier;\nconst field = $('Parse Update Data').first().json.field;\nconst value = $('Parse Update Data').first().json.value;\n\n// Si HTTP Search tuvo éxito, usar ese ID\nif ($input.item.json.id) {\n  const data = {\n    contact_id: $input.item.json.id\n  };\n  \n  if (field) {\n    data[field] = value;\n  }\n  \n  return data;\n}\n\n// Si falló, el contacto no existe\nthrow new Error(`No se encontró el contacto \"${identifier}\". Por favor verifica el nombre, email o teléfono.`);"
+      },
+      "id": "8f816b24-c7f6-4a65-bd43-7566da26e2c7",
+      "name": "Resolve Update Contact",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        336,
+        304
       ]
     },
     {
@@ -161,52 +208,54 @@
         "jsonBody": "={{ JSON.stringify($json) }}",
         "options": {}
       },
-      "id": "070bb5f7-1ecc-47d9-bccb-16a659de338c",
+      "id": "09ad6668-eecd-4313-a7c5-5d69d479ccbf",
       "name": "HTTP Update Contact",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        800,
-        16
-      ]
+        224,
+        112
+      ],
+      "onError": "continueRegularOutput"
     },
     {
       "parameters": {
         "jsCode": "const data = $input.item.json;\n\nif (data.already_exists) {\n  return {\n    output: `⚠️ Este contacto ya existe en el sistema.\\n\\n📧 Email: ${data.email || 'No proporcionado'}\\n📱 Teléfono: ${data.phone || 'No proporcionado'}\\n🆔 ID: ${data.id}\\n\\n¿Quieres agregar una nota o actualizar su información?`\n  };\n} else {\n  return {\n    output: `¡Perfecto! He creado el contacto de ${data.name} exitosamente.\\n\\n📧 Email: ${data.email || 'No proporcionado'}\\n📱 Teléfono: ${data.phone || 'No proporcionado'}\\n🆔 ID: ${data.id}\\n\\n¿Necesitas agregar alguna nota o realizar otra acción?`\n  };\n}"
       },
-      "id": "a0b63695-ce92-4435-9ffc-3e81d6558c54",
+      "id": "1911d184-78f5-4c78-8b9e-5df17c12c202",
       "name": "Format Create Response",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1168,
-        -384
+        560,
+        -496
       ]
     },
     {
       "parameters": {
-        "jsCode": "const data = $input.item.json;\nreturn {\n  output: `✅ Nota agregada exitosamente.\\n\\n📝 Contenido: \"${data.content}\"\\n\\n¿Hay algo más en lo que pueda ayudarte?`\n};"
+        "mode": "runOnceForEachItem",
+        "jsCode": "const data = $json.message;\nreturn {\n  output: `✅ Nota agregada exitosamente.\\n\\n📝 Contenido: \"${data}\"\\n\\n¿Hay algo más en lo que pueda ayudarte?`\n};"
       },
-      "id": "37f57647-3d15-41af-af53-4758de03053b",
+      "id": "18fe8675-5408-4c00-b51b-18a6d50eeb29",
       "name": "Format Note Response",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1024,
-        -192
+        480,
+        -288
       ]
     },
     {
       "parameters": {
         "jsCode": "return {\n  output: `✅ Contacto actualizado correctamente.\\n\\n¿Necesitas realizar alguna otra modificación?`\n};"
       },
-      "id": "5076bd72-5b1e-431d-bd95-365add38a7e4",
+      "id": "9a7d0cd8-883a-4bca-b1d7-466a420b1178",
       "name": "Format Update Response",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1024,
-        16
+        448,
+        96
       ]
     },
     {
@@ -292,10 +341,10 @@
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.3,
       "position": [
-        272,
-        -192
+        -336,
+        -304
       ],
-      "id": "453368ff-61f8-485c-a4bd-20e95a6d2cc8",
+      "id": "cc4104e8-644f-4f9f-a116-e5f159d39d06",
       "name": "Switch"
     }
   ],
@@ -352,11 +401,65 @@
             "node": "HTTP Add Note",
             "type": "main",
             "index": 0
+          },
+          {
+            "node": "HTTP Search Contact (Note)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Search Contact (Note)": {
+      "main": [
+        [
+          {
+            "node": "Resolve Note Contact",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Resolve Note Contact": {
+      "main": [
+        [
+          {
+            "node": "HTTP Add Note",
+            "type": "main",
+            "index": 0
           }
         ]
       ]
     },
     "Parse Update Data": {
+      "main": [
+        [
+          {
+            "node": "HTTP Update Contact",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "HTTP Search Contact (Update)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Search Contact (Update)": {
+      "main": [
+        [
+          {
+            "node": "Resolve Update Contact",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Resolve Update Contact": {
       "main": [
         [
           {
@@ -389,11 +492,6 @@
         ]
       ]
     },
-    "Format Create Response": {
-      "main": [
-        []
-      ]
-    },
     "HTTP Add Note": {
       "main": [
         [
@@ -405,11 +503,6 @@
         ]
       ]
     },
-    "Format Note Response": {
-      "main": [
-        []
-      ]
-    },
     "HTTP Update Contact": {
       "main": [
         [
@@ -419,11 +512,6 @@
             "index": 0
           }
         ]
-      ]
-    },
-    "Format Update Response": {
-      "main": [
-        []
       ]
     },
     "Switch": {

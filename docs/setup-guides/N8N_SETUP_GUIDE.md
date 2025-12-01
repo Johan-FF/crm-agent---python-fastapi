@@ -9,7 +9,7 @@
 ### 2. Importar el Flujo
 1. Click en **"Workflows"** (menú superior)
 2. Click en **"Import"** o **"Import from File"**
-3. Seleccionar el archivo: `n8n-workflows/ -crm-agent-workflow.json`
+3. Seleccionar el archivo: `n8n-workflows/verticcal-crm-agent-v2.json`
 4. Click en **"Import"**
 
 El flujo se creará y abrirá automáticamente.

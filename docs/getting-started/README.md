@@ -15,7 +15,7 @@ Este proyecto implementa un agente conversacional que interpreta órdenes natura
 ┌─────────────────────────────────────────────────────────────┐
 │                         n8n                                  │
 │  ┌──────────────────────────────────────────────────────┐   │
-│  │  Chat Trigger → Chat Agent + Tools → Memory          │   │
+│  │  Chat Trigger → Chat Agent + Tools                   │   │
 │  └──────────────────────────────────────────────────────┘   │
 └────────────────────┬────────────────────────────────────────┘
                      │
