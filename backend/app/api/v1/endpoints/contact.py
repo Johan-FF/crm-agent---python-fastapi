@@ -35,6 +35,23 @@ async def health_check(settings: Settings = Depends(get_settings)):
     )
 
 
+@router.get("/search")
+async def search_contact(q: str, db: Session = Depends(get_db)):
+    """
+    Busca un contacto por nombre, email o teléfono
+    
+    Args:
+        q: Query string para buscar
+        db: Dependencia de sesión de base de datos
+    
+    Returns:
+        ContactResponse o 404 si no existe
+    """
+    logger.info(f"GET /contact/search?q={q}")
+    service = ContactService(db)
+    return service.search_contact(q)
+
+
 @router.post("", response_model=ContactResponse)
 async def create_contact(contact: ContactCreate, db: Session = Depends(get_db)):
     """

@@ -89,6 +89,12 @@ class ContactRepository:
             Contact.name.ilike(f"%{name}%")
         ).first()
     
+    def get_by_phone(self, phone: str) -> Optional[Contact]:
+        """
+        Busca contacto por teléfono
+        """
+        return self.db.query(Contact).filter(Contact.phone == phone).first()
+    
     def get_all(self, skip: int = 0, limit: int = 100) -> List[Contact]:
         """
         Obtiene todos los contactos con paginación

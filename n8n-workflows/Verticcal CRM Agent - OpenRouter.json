@@ -2,103 +2,118 @@
   "name": "Verticcal CRM Agent - OpenRouter",
   "nodes": [
     {
-      "parameters": {},
-      "id": "c0d3f1a2-b3c4-5d6e-7f8a-9b0c1d2e3f4a",
-      "name": "When chat message received",
-      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
-      "typeVersion": 1.1,
-      "position": [240, 460]
-    },
-    {
       "parameters": {
         "options": {}
       },
-      "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+      "id": "7c5b610a-e771-4f52-a411-fe729aaa1514",
+      "name": "When chat message received",
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -480,
+        560
+      ],
+      "webhookId": "64e0eb46-40d2-4cad-aca2-26c24b364a4c"
+    },
+    {
+      "parameters": {},
+      "id": "6acff405-1d5a-4f91-90f3-24a8c4e8d27c",
       "name": "Window Buffer Memory",
       "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
       "typeVersion": 1.2,
-      "position": [580, 640]
+      "position": [
+        0,
+        784
+      ]
     },
     {
       "parameters": {
         "promptType": "define",
         "text": "=Eres un asistente de CRM inteligente especializado en gestión de contactos.\n\nTu trabajo es ayudar a los usuarios a:\n1. Crear contactos nuevos en el CRM\n2. Agregar notas a contactos existentes\n3. Actualizar información de contactos\n\nCuando el usuario te pida crear un contacto, usa la herramienta create_contact.\nCuando te pida agregar una nota, usa la herramienta add_note.\nCuando te pida actualizar un contacto, usa la herramienta update_contact.\n\nSiempre confirma las operaciones exitosas con mensajes claros que incluyan el ID del contacto.",
-        "hasOutputParser": false,
         "options": {}
       },
-      "id": "b2c3d4e5-f6a7-8901-bcde-f12345678901",
+      "id": "942ae945-a31a-4a19-bd40-72ac1b3bc9ec",
       "name": "AI Agent",
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 1.7,
-      "position": [580, 460]
+      "position": [
+        -144,
+        560
+      ]
     },
     {
       "parameters": {
-        "model": "gpt-4-turbo",
+        "model": "openai/gpt-4o",
         "options": {
-          "temperature": 0.7,
-          "maxTokens": 2000
+          "maxTokens": 2000,
+          "temperature": 0.7
         }
       },
-      "id": "c3d4e5f6-a7b8-9012-cdef-123456789012",
+      "id": "ef8c3d91-0a54-4781-9862-f8e3bc434ecf",
       "name": "OpenAI Model (via OpenRouter)",
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1,
-      "position": [800, 640]
+      "position": [
+        -144,
+        768
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "slLpmTkoppTi3fCz",
+          "name": "OpenAi account"
+        }
+      }
     },
     {
       "parameters": {
-        "name": "create_contact",
-        "description": "Crea un nuevo contacto en el CRM con nombre, email y teléfono",
         "method": "POST",
         "url": "http://localhost:8000/api/v1/contact",
-        "authentication": "none",
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={{ JSON.stringify({ name: $fromAI('name', '', 'Nombre completo del contacto'), email: $fromAI('email', '', 'Email del contacto (opcional)'), phone: $fromAI('phone', '', 'Teléfono del contacto (opcional)') }) }}",
-        "options": {}
+        "jsonBody": "={{ JSON.stringify({ name: $fromAI('name', '', 'Nombre completo del contacto'), email: $fromAI('email', '', 'Email del contacto (opcional)'), phone: $fromAI('phone', '', 'Teléfono del contacto (opcional)') }) }}"
       },
-      "id": "d4e5f6a7-b8c9-0123-def0-234567890123",
+      "id": "639a9193-0068-4664-9523-08d96ece469f",
       "name": "ToolCreateContact",
       "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
       "typeVersion": 1.1,
-      "position": [800, 460]
+      "position": [
+        416,
+        592
+      ]
     },
     {
       "parameters": {
-        "name": "add_note",
-        "description": "Agrega una nota a un contacto existente usando su ID",
         "method": "POST",
         "url": "http://localhost:8000/api/v1/contact/note",
-        "authentication": "none",
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={{ JSON.stringify({ contact_id: parseInt($fromAI('contact_id', '', 'ID numérico del contacto')), content: $fromAI('content', '', 'Contenido de la nota') }) }}",
-        "options": {}
+        "jsonBody": "={{ JSON.stringify({ contact_id: parseInt($fromAI('contact_id', '', 'ID numérico del contacto')), content: $fromAI('content', '', 'Contenido de la nota') }) }}"
       },
-      "id": "e5f6a7b8-c9d0-1234-ef01-345678901234",
+      "id": "b14020cb-1e6d-4cd0-8055-413ed25d8d21",
       "name": "ToolAddNote",
       "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
       "typeVersion": 1.1,
-      "position": [800, 320]
+      "position": [
+        416,
+        448
+      ]
     },
     {
       "parameters": {
-        "name": "update_contact",
-        "description": "Actualiza información de un contacto existente (nombre, email o teléfono)",
         "method": "PATCH",
         "url": "http://localhost:8000/api/v1/contact",
-        "authentication": "none",
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={{ JSON.stringify({ contact_id: parseInt($fromAI('contact_id', '', 'ID del contacto a actualizar')), name: $fromAI('name', '', 'Nuevo nombre (opcional)'), email: $fromAI('email', '', 'Nuevo email (opcional)'), phone: $fromAI('phone', '', 'Nuevo teléfono (opcional)') }) }}",
-        "options": {}
+        "jsonBody": "={{ JSON.stringify({ contact_id: parseInt($fromAI('contact_id', '', 'ID del contacto a actualizar')), name: $fromAI('name', '', 'Nuevo nombre (opcional)'), email: $fromAI('email', '', 'Nuevo email (opcional)'), phone: $fromAI('phone', '', 'Nuevo teléfono (opcional)') }) }}"
       },
-      "id": "f6a7b8c9-d0e1-2345-f012-456789012345",
+      "id": "852ad59b-6545-4c79-8fac-6b44d9382f56",
       "name": "ToolUpdateContact",
       "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
       "typeVersion": 1.1,
-      "position": [800, 180]
+      "position": [
+        400,
+        304
+      ]
     }
   ],
   "pinData": {},
@@ -174,11 +189,11 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "1a2b3c4d-5e6f-7890-abcd-ef1234567890",
+  "versionId": "2fd1cfb5-f088-4970-951b-4bf39fa8271a",
   "meta": {
     "templateCredsSetupCompleted": true,
-    "instanceId": "verticcal-crm-agent-openrouter"
+    "instanceId": "185a760f73cd5fe16f9ecd978f0492b3ef5be27956aa2181147f8ba6615bf8ef"
   },
-  "id": "verticcal-crm-agent",
+  "id": "vGqTDkMz1sxKYmUu",
   "tags": []
 }
